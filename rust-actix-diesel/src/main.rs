@@ -18,18 +18,26 @@ use crate::models::Gif;
 
 async fn index(
     path: web::Path<String>,
-    db: web::Data<DbStatePool>,
+    db: web::Data<State>,
 ) -> Result<HttpResponse, Error> {
-    Ok(HttpResponse::Ok().json(Gif { id: 1, url: String::from("bogus") }))
+
+    let gif = web::block(move || {
+        db.create_gif(&path)
+
+    }).await.unwrap();
+
+    Ok(HttpResponse::Ok().json(gif))
 }
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
     let state = State::new();
 
+    state.run_migrations();
+
     HttpServer::new(move || {
         App::new()
-            .data(state.pool.clone())
+            .data(state.clone())
             .service(
                 web::resource("/{thing}").route(web::get().to(index)),
             )

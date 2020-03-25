@@ -23,12 +23,12 @@ impl State {
         }
     }
 
-    pub fn establish_connection_pool() -> Result<DbStatePool, r2d2::Error> {
+    fn establish_connection_pool() -> Result<DbStatePool, r2d2::Error> {
         let manager = State::establish_connection_manager();
         Pool::builder().build(manager)
     }
 
-    pub fn establish_connection_manager() -> ConnectionManager<SqliteConnection> {
+    fn establish_connection_manager() -> ConnectionManager<SqliteConnection> {
         dotenv().ok();
 
         let database_url = env::var("DATABASE_URL")
