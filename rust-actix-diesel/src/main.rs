@@ -6,9 +6,9 @@ extern crate actix_threadpool;
 extern crate diesel_migrations;
 extern crate dotenv;
 
-pub mod schema;
-pub mod models;
-pub mod state;
+mod schema;
+mod models;
+mod state;
 
 use actix_web::{web, guard, App, HttpServer, HttpResponse, Result, error};
 use serde::{Serialize};
@@ -44,9 +44,7 @@ impl StatusMsg {
 }
 
 
-async fn get_all_gif(
-    db: web::Data<State>,
-) -> Result<HttpResponse> {
+async fn get_all_gif( db: web::Data<State>,) -> Result<HttpResponse> {
 
     match web::block(
         move || {

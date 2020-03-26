@@ -25,6 +25,9 @@ def request_password():
 
 @app.route("/", methods=["POST"])
 def index():
+    """
+    Initializes the database.
+    """
     if request_password() != PASSWORD:
         abort(401)
     db.create_all()
