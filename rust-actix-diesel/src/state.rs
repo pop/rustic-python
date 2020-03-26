@@ -6,8 +6,6 @@ use std::env;
 use crate::models::{NewGif, Gif};
 use diesel::r2d2::ConnectionManager;
 use diesel::r2d2::Pool;
-use diesel::r2d2::PooledConnection;
-use r2d2::Error;
 
 pub type DbStatePool = Pool<ConnectionManager<SqliteConnection>>;
 
@@ -19,7 +17,7 @@ pub struct State {
 impl State {
     pub fn new() -> Self {
         State {
-            pool: State::establish_connection_pool().expect("Umm."),
+            pool: State::establish_connection_pool().expect("Umm."), // FIXME
         }
     }
 
@@ -32,13 +30,13 @@ impl State {
         dotenv().ok();
 
         let database_url = env::var("DATABASE_URL")
-            .expect("Please set the DATABASE_URL env variable");
+            .expect("Please set the DATABASE_URL env variable"); // FIXME
 
         ConnectionManager::<SqliteConnection>::new(&database_url)
     }
 
     pub fn run_migrations(&self) -> Result<(), RunMigrationsError> {
-        run_pending_migrations(&self.pool.get().expect("Umm...")) 
+        run_pending_migrations(&self.pool.get().expect("Umm..."))  // FIXME
     }
 
     pub fn create_gif(&self, url: &str) -> Result<Gif, diesel::result::Error> {
@@ -50,7 +48,8 @@ impl State {
 
         diesel::insert_into(table)
             .values(new_gif)
-            .execute(&self.pool.get().expect("Umm..."));
+            .execute(&self.pool.get().expect("Umm...")) // FIXME
+            .unwrap(); // FIXME
 
         self.get_latest_gif()
     }
@@ -58,8 +57,8 @@ impl State {
     pub fn get_latest_gif(&self) -> Result<Gif, diesel::result::Error> {
         use crate::schema::gifs::dsl::*;
 
-        match gifs.filter(url.eq(&url)).load::<Gif>(&self.pool.get().expect("Umm...")) {
-            Ok(mut gif) => Ok(gif.pop().expect("What?")),
+        match gifs.filter(url.eq(&url)).load::<Gif>(&self.pool.get().expect("Umm...")) { // FIXME
+            Ok(mut gif) => Ok(gif.pop().expect("What?")), // FIXME
             Err(e) => Err(e)
         }
     }
@@ -69,13 +68,13 @@ impl State {
         
         gifs 
             .find(gif_id)
-            .first::<Gif>(&self.pool.get().expect("Umm..."))
+            .first::<Gif>(&self.pool.get().expect("Umm...")) // FIXME
     }
 
     pub fn get_all_gifs(&self) -> Result<Vec<Gif>, diesel::result::Error> {
         use crate::schema::gifs::dsl::*;
         
         gifs 
-            .load::<Gif>(&self.pool.get().expect("Umm..."))
+            .load::<Gif>(&self.pool.get().expect("Umm...")) // FIXME
     }
 }

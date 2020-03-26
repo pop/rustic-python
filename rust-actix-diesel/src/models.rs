@@ -12,3 +12,8 @@ pub struct Gif {
 pub struct NewGif<'a> {
     pub url: &'a str,
 }
+
+#[derive(Deserialize, Serialize)]
+pub struct GifForm {
+    pub url: String,
+}
