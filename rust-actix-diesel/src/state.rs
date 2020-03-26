@@ -36,7 +36,9 @@ impl State {
     }
 
     pub fn run_migrations(&self) -> Result<(), RunMigrationsError> {
-        run_pending_migrations(&self.pool.get().expect("Umm..."))  // FIXME
+        run_pending_migrations(
+            &self.pool.get().expect("Umm...") // FIXME
+        )
     }
 
     pub fn create_gif(&self, url: &str) -> Result<Gif, diesel::result::Error> {

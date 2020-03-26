@@ -7,15 +7,34 @@ AUTH_HEADER='Authorization: cloudbolt'
 MIME_TYPE_HEADER='Content-Type: application/json'
 NEW_GIF_DATA="{\"url\":\"https://some.random.gif/${RANDOM}.gif\"}"
 
-echo "Initializing database request:"
-echo curl -L --request POST --header "${MIME_TYPE_HEADER}" --header "${AUTH_HEADER}" ${BASE_URL}
-curl -L --request POST --header "${MIME_TYPE_HEADER}" --header "${AUTH_HEADER}" ${BASE_URL}
-echo "Creating gif request:"
-echo curl -L --request POST --header "${MIME_TYPE_HEADER}" --header "${AUTH_HEADER}" --data "${NEW_GIF_DATA}" ${BASE_GIF_URL}
-curl -L --request POST --header "${MIME_TYPE_HEADER}" --header "${AUTH_HEADER}" --data "${NEW_GIF_DATA}" ${BASE_GIF_URL}
-echo "Getting gif request:"
-echo curl -L --request GET --header "${MIME_TYPE_HEADER}" ${GET_GIF_URL}
-curl -L --request GET --header "${MIME_TYPE_HEADER}" ${GET_GIF_URL}
-echo "Getting _all gifs_ request:"
-echo curl -L --request GET --header "${MIME_TYPE_HEADER}" ${BASE_GIF_URL}
-curl -L --request GET --header "${MIME_TYPE_HEADER}" ${BASE_GIF_URL}
+VERBOSE=$1
+if [[ $VERBOSE != "-v" ]]; then
+    VERBOSE=""
+fi
+
+echo "Initializing database request"
+test $VERBOSE && \
+    echo curl -s -L --request POST --header "${MIME_TYPE_HEADER}" --header "${AUTH_HEADER}" ${BASE_URL} | jq .
+curl -s -L --request POST --header "${MIME_TYPE_HEADER}" --header "${AUTH_HEADER}" ${BASE_URL} | jq .
+echo
+
+
+echo "Creating gif request"
+test $VERBOSE && \
+    echo curl -s -L --request POST --header "${MIME_TYPE_HEADER}" --header "${AUTH_HEADER}" --data "${NEW_GIF_DATA}" ${BASE_GIF_URL} | jq .
+curl -s -L --request POST --header "${MIME_TYPE_HEADER}" --header "${AUTH_HEADER}" --data "${NEW_GIF_DATA}" ${BASE_GIF_URL} | jq .
+echo
+
+
+echo "Getting gif request"
+test $VERBOSE && \
+    echo curl -s -L --request GET --header "${MIME_TYPE_HEADER}" ${GET_GIF_URL} | jq .
+curl -s -L --request GET --header "${MIME_TYPE_HEADER}" ${GET_GIF_URL} | jq .
+echo
+
+
+echo "Getting _all gifs_ request"
+test $VERBOSE && \
+    echo curl -s -L --request GET --header "${MIME_TYPE_HEADER}" ${BASE_GIF_URL} | jq .
+curl -s -L --request GET --header "${MIME_TYPE_HEADER}" ${BASE_GIF_URL} | jq .
+echo

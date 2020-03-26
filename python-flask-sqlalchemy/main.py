@@ -1,9 +1,8 @@
-from markupsafe import escape
 from flask import Flask, request, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 
 
-PASSWORD="cloudbolt"
+PASSWORD = "cloudbolt"
 app = Flask(__name__)
 app.config.update(
     SQLALCHEMY_DATABASE_URI="sqlite://",
@@ -23,6 +22,7 @@ class Gif(db.Model):
 def request_password():
     return request.headers["Authorization"]
 
+
 @app.route("/", methods=["POST"])
 def index():
     if request_password() != PASSWORD:
@@ -37,7 +37,7 @@ def notfound(_error):
 
 
 @app.errorhandler(401)
-def notfound(_error):
+def notallowed(_error):
     return jsonify(error="You can't do that!"), 401
 
 

@@ -10,9 +10,11 @@ edition = "2018"
 actix = "0.9"
 actix-web = "2.0"
 actix-rt = "1.0"
+actix-threadpool = "*"
 dotenv = "0.15"
 diesel_migrations = "1.4"
 serde = "*"
+serde_json = "*"
 r2d2 = "*"
 
 [dependencies.diesel]
